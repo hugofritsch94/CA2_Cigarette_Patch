@@ -1,0 +1,255 @@
+0 Material Base
+ 1 string m_Name = "Seed"
+ 0 PPtr<Shader> m_Shader
+  0 int m_FileID = 0
+  0 SInt64 m_PathID = 8702488859957822594
+ 0 vector m_ValidKeywords
+  1 Array Array (2 items)
+   0 int size = 2
+   [0]
+    1 string data = "_ALPHABLEND_ON"
+   [1]
+    1 string data = "_EMISSION"
+ 0 vector m_InvalidKeywords
+  1 Array Array (0 items)
+   0 int size = 0
+ 0 unsigned int m_LightmapFlags = 0
+ 0 bool m_EnableInstancingVariants = false
+ 1 bool m_DoubleSidedGI = false
+ 0 int m_CustomRenderQueue = 3000
+ 0 map stringTagMap
+  0 Array Array (1 items)
+   0 int size = 1
+   [0]
+    0 pair data
+     1 string first = "RenderType"
+     1 string second = "Transparent"
+ 0 vector disabledShaderPasses
+  1 Array Array (1 items)
+   0 int size = 1
+   [0]
+    1 string data = "GRABPASS"
+ 0 UnityPropertySheet m_SavedProperties
+  0 map m_TexEnvs
+   0 Array Array (4 items)
+    0 int size = 4
+    [0]
+     0 pair data
+      1 string first = "_BumpMap"
+      0 UnityTexEnv second
+       0 PPtr<Texture> m_Texture
+        0 int m_FileID = 0
+        0 SInt64 m_PathID = 0
+       0 Vector2f m_Scale
+        0 float x = 1
+        0 float y = 1
+       0 Vector2f m_Offset
+        0 float x = 0
+        0 float y = 0
+    [1]
+     0 pair data
+      1 string first = "_EmissionMap"
+      0 UnityTexEnv second
+       0 PPtr<Texture> m_Texture
+        0 int m_FileID = 0
+        0 SInt64 m_PathID = 0
+       0 Vector2f m_Scale
+        0 float x = 1
+        0 float y = 1
+       0 Vector2f m_Offset
+        0 float x = 0
+        0 float y = 0
+    [2]
+     0 pair data
+      1 string first = "_MainTex"
+      0 UnityTexEnv second
+       0 PPtr<Texture> m_Texture
+        0 int m_FileID = 0
+        0 SInt64 m_PathID = 1659400622606647993
+       0 Vector2f m_Scale
+        0 float x = 1
+        0 float y = 1
+       0 Vector2f m_Offset
+        0 float x = 0
+        0 float y = 0
+    [3]
+     0 pair data
+      1 string first = "_MetallicGlossMap"
+      0 UnityTexEnv second
+       0 PPtr<Texture> m_Texture
+        0 int m_FileID = 0
+        0 SInt64 m_PathID = 0
+       0 Vector2f m_Scale
+        0 float x = 1
+        0 float y = 1
+       0 Vector2f m_Offset
+        0 float x = 0
+        0 float y = 0
+  0 map m_Ints
+   0 Array Array (0 items)
+    0 int size = 0
+  0 map m_Floats
+   0 Array Array (31 items)
+    0 int size = 31
+    [0]
+     0 pair data
+      1 string first = "_BlendOp"
+      0 float second = 0
+    [1]
+     0 pair data
+      1 string first = "_BumpScale"
+      0 float second = 1
+    [2]
+     0 pair data
+      1 string first = "_CameraFadingEnabled"
+      0 float second = 0
+    [3]
+     0 pair data
+      1 string first = "_CameraFarFadeDistance"
+      0 float second = 2
+    [4]
+     0 pair data
+      1 string first = "_CameraNearFadeDistance"
+      0 float second = 1
+    [5]
+     0 pair data
+      1 string first = "_Cull"
+      0 float second = 2
+    [6]
+     0 pair data
+      1 string first = "_Cutoff"
+      0 float second = 0,5
+    [7]
+     0 pair data
+      1 string first = "_DetailNormalMapScale"
+      0 float second = 1
+    [8]
+     0 pair data
+      1 string first = "_DistortionBlend"
+      0 float second = 0,5
+    [9]
+     0 pair data
+      1 string first = "_DistortionEnabled"
+      0 float second = 0
+    [10]
+     0 pair data
+      1 string first = "_DistortionStrength"
+      0 float second = 1
+    [11]
+     0 pair data
+      1 string first = "_DistortionStrengthScaled"
+      0 float second = 0
+    [12]
+     0 pair data
+      1 string first = "_DstBlend"
+      0 float second = 10
+    [13]
+     0 pair data
+      1 string first = "_EmissionEnabled"
+      0 float second = 1
+    [14]
+     0 pair data
+      1 string first = "_FlipbookMode"
+      0 float second = 0
+    [15]
+     0 pair data
+      1 string first = "_GlossMapScale"
+      0 float second = 1
+    [16]
+     0 pair data
+      1 string first = "_Glossiness"
+      0 float second = 0,5
+    [17]
+     0 pair data
+      1 string first = "_GlossyReflections"
+      0 float second = 1
+    [18]
+     0 pair data
+      1 string first = "_LightingEnabled"
+      0 float second = 1
+    [19]
+     0 pair data
+      1 string first = "_Metallic"
+      0 float second = 0
+    [20]
+     0 pair data
+      1 string first = "_Mode"
+      0 float second = 2
+    [21]
+     0 pair data
+      1 string first = "_OcclusionStrength"
+      0 float second = 1
+    [22]
+     0 pair data
+      1 string first = "_Parallax"
+      0 float second = 0,02
+    [23]
+     0 pair data
+      1 string first = "_SmoothnessTextureChannel"
+      0 float second = 0
+    [24]
+     0 pair data
+      1 string first = "_SoftParticlesEnabled"
+      0 float second = 0
+    [25]
+     0 pair data
+      1 string first = "_SoftParticlesFarFadeDistance"
+      0 float second = 1
+    [26]
+     0 pair data
+      1 string first = "_SoftParticlesNearFadeDistance"
+      0 float second = 0
+    [27]
+     0 pair data
+      1 string first = "_SpecularHighlights"
+      0 float second = 1
+    [28]
+     0 pair data
+      1 string first = "_SrcBlend"
+      0 float second = 5
+    [29]
+     0 pair data
+      1 string first = "_UVSec"
+      0 float second = 0
+    [30]
+     0 pair data
+      1 string first = "_ZWrite"
+      0 float second = 0
+  0 map m_Colors
+   0 Array Array (4 items)
+    0 int size = 4
+    [0]
+     0 pair data
+      1 string first = "_CameraFadeParams"
+      0 ColorRGBA second
+       0 float r = 0
+       0 float g = ∞
+       0 float b = 0
+       0 float a = 0
+    [1]
+     0 pair data
+      1 string first = "_Color"
+      0 ColorRGBA second
+       0 float r = 1
+       0 float g = 1
+       0 float b = 1
+       0 float a = 1
+    [2]
+     0 pair data
+      1 string first = "_EmissionColor"
+      0 ColorRGBA second
+       0 float r = 1
+       0 float g = 0,96398103
+       0 float b = 0,6745283
+       0 float a = 1
+    [3]
+     0 pair data
+      1 string first = "_SoftParticleFadeParams"
+      0 ColorRGBA second
+       0 float r = 0
+       0 float g = 0
+       0 float b = 0
+       0 float a = 0
+ 0 vector m_BuildTextureStacks
+  1 Array Array (0 items)
+   0 int size = 0
