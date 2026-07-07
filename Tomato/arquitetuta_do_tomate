@@ -1,0 +1,540 @@
+Perfeito. Vamos fazer isso de forma estruturada e metódica. Vou começar pelo **coração da arquitetura** e expandir para fora.
+
+---
+
+# 🔍 ANÁLISE ESTRUTURADA — ARQUITETURA DO TOMATE (California 2)
+
+---
+
+## FASE 1 — ANÁLISE DO GAMEOBJECT PRINCIPAL
+
+Vou começar pelo `Tomato.asset` que é o GameObject da planta com frutos.
+
+### Arquivo: `Tomato-CAB-99ab61915a97863d884e2f8fab63b22a-8587168625361793641.txt`
+
+```
+0 GameObject Base
+ 0 vector m_Component
+  1 Array Array (3 items)
+   0 int size = 3
+   [0]
+    0 ComponentPair data
+     0 PPtr<Component> component
+      0 int m_FileID = 0
+      0 SInt64 m_PathID = -7325223622832500731
+   [1]
+    0 ComponentPair data
+     0 PPtr<Component> component
+      0 int m_FileID = 0
+      0 SInt64 m_PathID = -1293250354100239469
+   [2]
+    0 ComponentPair data
+     0 PPtr<Component> component
+      0 int m_FileID = 0
+      0 SInt64 m_PathID = -1558674510722253469
+ 0 unsigned int m_Layer = 14
+ 1 string m_Name = "Tomato"
+ 0 UInt16 m_Tag = 20005
+ 0 bool m_IsActive = true
+```
+
+### O que isso nos diz:
+
+| Propriedade | Valor | Significado |
+|---|---|---|
+| **Nome** | "Tomato" | Objeto principal do tomate |
+| **Layer** | 14 | Provavelmente `Resource` ou `Small` no Unturned |
+| **Tag** | 20005 | Tag personalizada do mod (identificador único) |
+| **Componentes** | 3 | Transform + MeshFilter + MeshRenderer + possivelmente Interactable |
+| **Ativo** | true | O objeto existe no mundo |
+
+### Mas espere... há DOIS arquivos Tomato!
+
+Isso é importante. Vamos olhar o segundo:
+
+### Arquivo: `Tomato-CAB-99ab61915a97863d884e2f8fab63b22a-7176433437961689815.txt`
+
+```
+0 GameObject Base
+ 0 vector m_Component
+  1 Array Array (3 items)
+   0 int size = 3
+   [0]
+    0 ComponentPair data
+     0 PPtr<Component> component
+      0 int m_FileID = 0
+      0 SInt64 m_PathID = -5891700007411388671
+   [1]
+    0 ComponentPair data
+     0 PPtr<Component> component
+      0 int m_FileID = 0
+      0 SInt64 m_PathID = -4403296883254596987
+   [2]
+    0 ComponentPair data
+     0 PPtr<Component> component
+      0 int m_FileID = 0
+      0 SInt64 m_PathID = 7248875319707080007
+ 0 unsigned int m_Layer = 27
+ 1 string m_Name = "Tomato"
+ 0 UInt16 m_Tag = 20019
+ 0 bool m_IsActive = true
+```
+
+### Comparação dos dois GameObjects:
+
+| Propriedade | Tomato #1 | Tomato #2 |
+|---|---|---|
+| **Layer** | 14 | 27 |
+| **Tag** | 20005 | 20019 |
+| **PathIDs** | -732522...<br>-129325...<br>-155867... | -589170...<br>-440329...<br>724887... |
+
+### Interpretação:
+
+- **Tomato #1 (Layer 14)** → Provavelmente o **objeto no mundo** (planta com fruto)
+- **Tomato #2 (Layer 27)** → Provavelmente o **item no inventário** (tomate colhido)
+
+**Layer 14** no Unturned geralmente é `Resource` ou `Small` — objetos interagíveis no mundo.
+**Layer 27** geralmente é `Item` — objetos no inventário ou no chão.
+
+Isso já nos dá a primeira pista da arquitetura: **o mesmo nome "Tomato" é usado para dois propósitos diferentes**, distinguidos por Layer e Tag.
+
+---
+
+## FASE 2 — ANÁLISE DOS MODELOS (MESHES)
+
+Agora vamos ver os modelos 3D que esses GameObjects usam.
+
+### Arquivo: `Tomato_0-CAB-99ab61915a97863d884e2f8fab63b22a-6805845510861030024.txt`
+
+```
+0 Mesh Base
+ 1 string m_Name = "Tomato_0"
+ 0 vector m_SubMeshes
+  1 Array Array (2 items)
+   [0]
+    0 SubMesh data
+     0 unsigned int firstByte = 0
+     0 unsigned int indexCount = 78
+     0 unsigned int vertexCount = 15
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = 0,003045313
+       0 float y = 0,019894466
+       0 float z = 0,08789355
+      0 Vector3f m_Extent
+       0 float x = 0,17256242
+       0 float y = 0,1641166
+       0 float z = 0,12054657
+   [1]
+    0 SubMesh data
+     0 unsigned int firstByte = 156
+     0 unsigned int indexCount = 84
+     0 unsigned int vertexCount = 24
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = 0,0030453429
+       0 float y = 0,00256823
+       0 float z = 0,2429524
+      0 Vector3f m_Extent
+       0 float x = 0,12910113
+       0 float y = 0,12910114
+       0 float z = 0,034557708
+```
+
+### Interpretação:
+
+| SubMesh | Vértices | Triângulos | Posição | Tamanho | Provável função |
+|---|---|---|---|---|---|
+| **0** | 15 | 78 | y=0.019, z=0.087 | 0.172 x 0.164 x 0.120 | Corpo do tomate |
+| **1** | 24 | 84 | y=0.002, z=0.242 | 0.129 x 0.129 x 0.034 | Talinho/caule do tomate |
+
+**Tomato_0** é o modelo completo do fruto: corpo + talinho.
+
+### Arquivo: `Tomato_1-CAB-99ab61915a97863d884e2f8fab63b22a--2016497272483327766.txt`
+
+```
+0 Mesh Base
+ 1 string m_Name = "Tomato_1"
+ 0 vector m_SubMeshes
+  1 Array Array (2 items)
+   [0]
+    0 SubMesh data
+     0 unsigned int firstByte = 0
+     0 unsigned int indexCount = 60
+     0 unsigned int vertexCount = 12
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = 0,003045313
+       0 float y = 0,019894488
+       0 float z = 0,08789355
+      0 Vector3f m_Extent
+       0 float x = 0,17256242
+       0 float y = 0,16411659
+       0 float z = 0,12054657
+   [1]
+    0 SubMesh data
+     0 unsigned int firstByte = 120
+     0 unsigned int indexCount = 6
+     0 unsigned int vertexCount = 4
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = 0,0030453429
+       0 float y = 0,00256823
+       0 float z = 0,21426314
+      0 Vector3f m_Extent
+       0 float x = 0,12910113
+       0 float y = 0,12910114
+       0 float z = 0
+```
+
+| SubMesh | Vértices | Triângulos | Posição | Tamanho | Provável função |
+|---|---|---|---|---|---|
+| **0** | 12 | 60 | y=0.019, z=0.087 | 0.172 x 0.164 x 0.120 | Corpo do tomate (versão simplificada) |
+| **1** | 4 | 6 | y=0.002, z=0.214 | 0.129 x 0.129 x 0.000 | Talinho (versão simplificada) |
+
+### Comparação Tomato_0 vs Tomato_1:
+
+| Característica | Tomato_0 | Tomato_1 |
+|---|---|---|
+| **Vértices total** | 39 (15+24) | 16 (12+4) |
+| **Triângulos total** | 162 (78+84) | 66 (60+6) |
+| **Detalhamento** | Mais detalhado | Simplificado |
+
+**Conclusão:** Tomato_0 e Tomato_1 são **LODs** (Level of Detail) do mesmo objeto. Tomato_0 é o modelo de alta qualidade, Tomato_1 é o de baixa qualidade para quando o objeto está longe.
+
+### Arquivo: `Tomato_Seed-CAB-99ab61915a97863d884e2f8fab63b22a--2818826824885601199.txt`
+
+```
+0 Mesh Base
+ 1 string m_Name = "Tomato_Seed"
+ 0 vector m_SubMeshes
+  1 Array Array (1 items)
+   [0]
+    0 SubMesh data
+     0 unsigned int firstByte = 0
+     0 unsigned int indexCount = 12
+     0 unsigned int vertexCount = 8
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = -3,7252903E-09
+       0 float y = 0
+       0 float z = -0,0017879419
+      0 Vector3f m_Extent
+       0 float x = 0,09510298
+       0 float y = 0,08988482
+       0 float z = 0,07239871
+```
+
+| Propriedade | Valor |
+|---|---|
+| **Vértices** | 8 |
+| **Triângulos** | 12 |
+| **Tamanho** | 0.095 x 0.089 x 0.072 |
+
+É um modelo **muito simples** — uma semente pequena. 8 vértices é o mínimo para um cubo, então provavelmente é uma forma arredondada simples.
+
+---
+
+## FASE 3 — ANÁLISE DO MATERIAL
+
+### Arquivo: `Plant_Tomato-CAB-99ab61915a97863d884e2f8fab63b22a-9081086301445832867.txt`
+
+```
+0 Material Base
+ 1 string m_Name = "Plant_Tomato"
+ 0 PPtr<Shader> m_Shader
+  0 int m_FileID = 0
+  0 SInt64 m_PathID = 6661442146922177206
+ 0 vector m_ValidKeywords
+  1 Array Array (2 items)
+   [0] "_ALPHATEST_ON"
+   [1] "_ALPHATEST_ON"
+ 0 int m_CustomRenderQueue = 2450
+ 0 map stringTagMap
+   [0] "RenderType" = "TransparentCutout"
+ 0 map m_Floats
+   "_Cutoff" = 0,5
+   "_Glossiness" = 0
+   "_Metallic" = 0
+   "_Mode" = 1
+ 0 map m_Colors
+   "_Color" = (0.356, 0.462, 0.290, 1.0)
+```
+
+### O que isso nos diz:
+
+| Propriedade | Valor | Significado |
+|---|---|---|
+| **Shader** | PathID 6661442146922177206 | Shader padrão do Unturned para plantas |
+| **Keywords** | _ALPHATEST_ON | Usa alpha testing (recorte transparente) |
+| **RenderQueue** | 2450 | TransparentCutout (entre Geometry e Transparent) |
+| **RenderType** | TransparentCutout | Objeto com recorte de transparência |
+| **_Cutoff** | 0,5 | Limite de alpha para recorte |
+| **_Color** | (0.356, 0.462, 0.290) | Verde escuro (cor da planta) |
+
+Isso é **um material de planta padrão** — usa transparência recortada para renderizar folhas, sem brilho ou reflexos.
+
+---
+
+## FASE 4 — ANÁLISE DOS ESTÁGIOS DE CRESCIMENTO
+
+### Arquivo: `Tomato_Wild-CAB-99ab61915a97863d884e2f8fab63b22a-361639760502446710.txt`
+
+```
+0 Mesh Base
+ 1 string m_Name = "Tomato_Wild"
+ 0 vector m_SubMeshes
+  1 Array Array (1 items)
+   [0]
+    0 SubMesh data
+     0 unsigned int firstByte = 0
+     0 unsigned int indexCount = 180
+     0 unsigned int vertexCount = 40
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = -0,18206088
+       0 float y = 0,06544429
+       0 float z = 1,1711975
+      0 Vector3f m_Extent
+       0 float x = 0,64197147
+       0 float y = 0,74219006
+       0 float z = 0,76813805
+```
+
+| Propriedade | Tomato_Wild |
+|---|---|
+| **Vértices** | 40 |
+| **Triângulos** | 180 |
+| **Altura (Y)** | center 0.065, extent 0.742 → **~0.81 de altura** |
+| **Posição Z** | 1.17 (no chão) |
+
+### Arquivo: `Tomato_Wild_S-CAB-99ab61915a97863d884e2f8fab63b22a-1669623619733756060.txt`
+
+```
+0 Mesh Base
+ 1 string m_Name = "Tomato_Wild_S"
+ 0 vector m_SubMeshes
+  1 Array Array (1 items)
+   [0]
+    0 SubMesh data
+     0 unsigned int firstByte = 0
+     0 unsigned int indexCount = 720
+     0 unsigned int vertexCount = 160
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = -0,18206088
+       0 float y = 0,034578204
+       0 float z = 1,1711975
+      0 Vector3f m_Extent
+       0 float x = 0,64197147
+       0 float y = 1,8730562
+       0 float z = 0,76813805
+```
+
+| Propriedade | Tomato_Wild_S |
+|---|---|
+| **Vértices** | 160 |
+| **Triângulos** | 720 |
+| **Altura (Y)** | center 0.034, extent 1.873 → **~1.91 de altura** |
+| **Posição Z** | 1.17 (no chão) |
+
+### Comparação:
+
+| Característica | Tomato_Wild | Tomato_Wild_S |
+|---|---|---|
+| **Altura** | ~0.81 | ~1.91 |
+| **Vértices** | 40 | 160 |
+| **Triângulos** | 180 | 720 |
+| **Detalhamento** | Simplificado | Mais detalhado |
+
+**Interpretação:**
+
+- `Tomato_Wild_S` (S = Small?) tem **mais vértices e é mais alto** — parece ser a planta **jovem/madura**
+- `Tomato_Wild` tem **menos vértices e é mais baixo** — parece ser a planta **pequena/broto**
+
+**Espera... isso é contra-intuitivo.**
+
+Normalmente `_S` significaria "Small" (pequeno). Mas aqui `Tomato_Wild_S` é **maior e mais detalhado** que `Tomato_Wild`.
+
+**Outra interpretação possível:**
+
+- `Tomato_Wild` → planta **selvagem/madura** (versão simples, LOD)
+- `Tomato_Wild_S` → planta **selvagem** (S = Standard? ou S = Stage?)
+
+Ou talvez `_S` signifique **"Stage"** (estágio), não "Small".
+
+Vamos ver a folhagem para confirmar.
+
+### Arquivo: `Tomato_Wild_Foliage-CAB-99ab61915a97863d884e2f8fab63b22a--7396797395447813115.txt`
+
+```
+0 Mesh Base
+ 1 string m_Name = "Tomato_Wild_Foliage"
+ 0 vector m_SubMeshes
+  1 Array Array (1 items)
+   [0]
+    0 SubMesh data
+     0 unsigned int firstByte = 0
+     0 unsigned int indexCount = 96
+     0 unsigned int vertexCount = 64
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = -0,04937482
+       0 float y = 0,08416796
+       0 float z = 1,0600618
+      0 Vector3f m_Extent
+       0 float x = 0,67692304
+       0 float y = 0,72242093
+       0 float z = 1,1600617
+```
+
+| Propriedade | Valor |
+|---|---|
+| **Vértices** | 64 |
+| **Triângulos** | 96 |
+| **Altura (Y)** | center 0.084, extent 0.722 → **~0.81 de altura** |
+| **Posição Z** | 1.06 |
+
+### Arquivo: `Tomato_Wild_Foliage_S-CAB-99ab61915a97863d884e2f8fab63b22a--3761718396872428392.txt`
+
+```
+0 Mesh Base
+ 1 string m_Name = "Tomato_Wild_Foliage_S"
+ 0 vector m_SubMeshes
+  1 Array Array (1 items)
+   [0]
+    0 SubMesh data
+     0 unsigned int firstByte = 0
+     0 unsigned int indexCount = 768
+     0 unsigned int vertexCount = 512
+     0 AABB localAABB
+      0 Vector3f m_Center
+       0 float x = -0,04937482
+       0 float y = 0,08416808
+       0 float z = 1,0600618
+      0 Vector3f m_Extent
+       0 float x = 0,67692304
+       0 float y = 2,1224208
+       0 float z = 1,1600617
+```
+
+| Propriedade | Valor |
+|---|---|
+| **Vértices** | 512 |
+| **Triângulos** | 768 |
+| **Altura (Y)** | center 0.084, extent 2.122 → **~2.21 de altura** |
+| **Posição Z** | 1.06 |
+
+### Comparação de folhagem:
+
+| Característica | Foliage | Foliage_S |
+|---|---|---|
+| **Altura** | ~0.81 | ~2.21 |
+| **Vértices** | 64 | 512 |
+| **Triângulos** | 96 | 768 |
+
+**Agora faz mais sentido:**
+
+| Nome | Altura | Vértices | Provável função |
+|---|---|---|---|
+| Tomato_Wild | ~0.81 | 40 | **Broto** (planta pequena) |
+| Tomato_Wild_S | ~1.91 | 160 | **Crescimento vegetativo** (planta alta) |
+| Tomato_Wild_Foliage | ~0.81 | 64 | **Folhagem do broto** |
+| Tomato_Wild_Foliage_S | ~2.21 | 512 | **Folhagem da planta alta** |
+
+**`_S` provavelmente significa "Stage" (estágio), não "Small".**
+
+---
+
+## FASE 5 — MAPEAMENTO COMPLETO DA ARQUITETURA
+
+### Hierarquia de arquivos:
+
+```
+TOMATO (planta no mundo — Layer 14, Tag 20005)
+│
+├── Tomato_0 (Mesh - fruto alta qualidade) ← LOD0
+├── Tomato_1 (Mesh - fruto baixa qualidade) ← LOD1
+├── Plant_Tomato (Material)
+│
+└── Tomato_Wild (Mesh - planta broto)
+    └── Tomato_Wild_Foliage (Mesh - folhagem broto)
+│
+└── Tomato_Wild_S (Mesh - planta estágio vegetativo)
+    └── Tomato_Wild_Foliage_S (Mesh - folhagem estágio vegetativo)
+
+TOMATO (item no inventário — Layer 27, Tag 20019)
+│
+├── Tomato_0 (Mesh - fruto) ← mesmo mesh do objeto mundo
+└── Tomato_Seed (Mesh - semente)
+```
+
+---
+
+## FASE 6 — PADRÃO DE ARQUITETURA PARA PLANTAS
+
+Com base nessa análise, o padrão do California 2 para plantas é:
+
+### 1. O item (semente)
+- **Mesh**: `[Planta]_Seed.asset` (modelo simples)
+- **Layer**: 27 (Item)
+- **Tag**: ID específico
+
+### 2. A planta no mundo (estágios)
+Cada estágio é um **modelo separado** com sua própria mesh:
+
+```
+[Planta]_Wild.asset        → estágio 1 (broto/plântula)
+[Planta]_Wild_S.asset      → estágio 2 (crescimento vegetativo)
+[Planta]_Wild_Foliage.asset    → folhagem do estágio 1
+[Planta]_Wild_Foliage_S.asset  → folhagem do estágio 2
+```
+
+### 3. O fruto
+- **GameObject**: `[Planta].asset` (Layer 14, Tag específica)
+- **Meshes**: `[Planta]_0.asset` e `[Planta]_1.asset` (LODs)
+- **Material**: `Plant_[Planta].asset`
+
+### 4. O item colhido
+- **GameObject**: `[Planta].asset` (Layer 27, Tag diferente)
+- **Mesh**: `[Planta]_0.asset` (ou `[Planta]_1.asset`)
+
+---
+
+## FASE 7 — APLICAÇÃO AO TABACO
+
+Para criar o tabaco, precisaríamos:
+
+### Itens:
+1. `Tobacco_Seed.asset` — semente (item)
+2. `Tobacco_Leaf.asset` — folha colhida (item)
+
+### Meshes da planta:
+3. `Tobacco_Wild.asset` — broto (estágio 1)
+4. `Tobacco_Wild_S.asset` — crescimento vegetativo (estágio 2)
+5. `Tobacco_Wild_Foliage.asset` — folhagem do broto
+6. `Tobacco_Wild_Foliage_S.asset` — folhagem do estágio 2
+
+### Fruto/colheita:
+7. `Tobacco.asset` — GameObject da planta pronta para colheita (Layer 14)
+8. `Tobacco_0.asset` — mesh da folha (LOD0)
+9. `Tobacco_1.asset` — mesh da folha (LOD1)
+
+### Material:
+10. `Plant_Tobacco.asset` — material da planta
+
+---
+
+## CONCLUSÃO
+
+A arquitetura do tomate no California 2 é:
+
+1. **Semente** → item no inventário
+2. **Planta broto** → mesh `_Wild` + `_Wild_Foliage`
+3. **Planta crescimento** → mesh `_Wild_S` + `_Wild_Foliage_S`
+4. **Planta frutífera** → GameObject com meshes `_0` e `_1` (LODs) + material `Plant_`
+5. **Fruto** → item no inventário (mesmo nome, Layer diferente)
+
+**`_S` significa "Stage"** — indica o estágio de crescimento da planta.
+
+Este é o **template** que o California 2 usa para todas as plantas. Para adicionar tabaco, basta replicar essa estrutura com novos nomes e GUIDs.
