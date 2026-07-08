@@ -1,0 +1,464 @@
+📐 ARQUITETURA COMPLETA DA BAG_OF_TOBACCO_SEEDS
+1. AssetBundle
+text
+CAB-[SEU_GUID_UNICO]
+2. Resumo da Arquitetura
+text
+SEMENTE DE TABACO (Item - Layer 27) [FASE 1 - ID: 52642]
+    ↓ Comprimir (Blueprint: Utilities + 8x Sementes → 1x Bag)
+BAG OF TOBACCO SEEDS (Item - Layer 27) [FASE 2 - ID: 9001]
+    ↓ Plantar (Useable Barricade → Build Farm)
+PLANTA DE TABACO (Barricade - Layer 27) [ANIMATED CIGARETTES - ID: 26413]
+    ↓ Cresce (Growth: 3600 segundos)
+PLANTA COM FOLHAS (Barricade + Resource)
+    ↓ Colher (Interagir com as folhas)
+FOLHA DE TABACO (Item - Layer 27) [ID: 26414]
+    ↓ Blueprint (Cross-mod da Fase 1)
+CIGARRO (Item) [ID: 26409]
+3. CICLO DE VIDA COMPLETO
+text
+┌─────────────────────────────────────────────────────────────────┐
+│             CICLO DA BAG OF TOBACCO SEEDS                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  FASE 1: SEMENTE INDIVIDUAL (Fase 1 - Já existe)        │  │
+│  │  Arquivo: Tobacco_Seed_CA.dat                            │  │
+│  │  GUID: d85985cb62b84b7b8b7d4ed21359f1d1                 │  │
+│  │  ID: 52642                                              │  │
+│  │  Type: Farm                                             │  │
+│  │  Useable: Barricade                                     │  │
+│  │  Build: Farm                                            │  │
+│  │  Growth: 3600 (1 hora)                                  │  │
+│  │  Grow: e240345a066843af8df45d8c5f6c8e80 (26413)        │  │
+│  └──────────────────────────┬───────────────────────────────┘  │
+│                             │                                   │
+│                             ▼                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  FASE 2: BAG OF TOBACCO SEEDS (NOVO - FASE 2)           │  │
+│  │  Arquivo: Bag_of_Tobacco_Seeds.dat                      │  │
+│  │  GUID: fd44252c66f7481a8ac8d29030837824                 │  │
+│  │  ID: 9001                                               │  │
+│  │  Type: Farm                                             │  │
+│  │  Size: 2x2                                              │  │
+│  │  Health: 32                                             │  │
+│  │  Growth: 3600                                           │  │
+│  │  Grow: e240345a066843af8df45d8c5f6c8e80 (26413)        │  │
+│  │  Allow_Fertilizer: false                                │  │
+│  │                                                          │  │
+│  │  Blueprints:                                            │  │
+│  │  ├── 8x Tobacco Seed CA (52642) → 1x Bag (9001)       │  │
+│  │  └── 1x Bag (9001) → 8x Tobacco Seed CA (52642)       │  │
+│  └──────────────────────────┬───────────────────────────────┘  │
+│                             │                                   │
+│                             ▼                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  FASE 3: PLANTA DE TABACO (REAPROVEITADA)               │  │
+│  │  ID: 26413 (referenciado por "Grow")                    │  │
+│  │  GUID: e240345a066843af8df45d8c5f6c8e80                 │  │
+│  │  Layer: 27 (Barricade)                                  │  │
+│  │  Mesh: TobaccoPlant_0 + TobaccoTrunk_0                  │  │
+│  │  Material: Tobacco + Tobacco-foliage                    │  │
+│  │  Fonte: Animated Cigarettes                             │  │
+│  └──────────────────────────┬───────────────────────────────┘  │
+│                             │                                   │
+│                             ▼                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  FASE 4: PLANTA COM FOLHAS (Resource)                   │  │
+│  │  Folha Layer: 14 (Resource)                             │  │
+│  │  Folha Mesh: TobaccoFoliage_1                           │  │
+│  │  Material: Tobacco-foliage                              │  │
+│  │  Drop: Tobacco_Leaf (26414)                             │  │
+│  │  Fonte: Animated Cigarettes                             │  │
+│  └──────────────────────────┬───────────────────────────────┘  │
+│                             │                                   │
+│                             ▼                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  FASE 5: FOLHA COLHIDA (Item)                           │  │
+│  │  Layer: 27 (Item)                                       │  │
+│  │  Tag: 20019                                             │  │
+│  │  Mesh: TobaccoLeaves_0                                  │  │
+│  │  Material: Tobacco-foliage                              │  │
+│  │  ID: 26414                                              │  │
+│  │  GUID: 42f47f1a23f948d9a691f5bedaa5f9fb                 │  │
+│  └──────────────────────────┬───────────────────────────────┘  │
+│                             │                                   │
+│                             ▼                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  FASE 6: BLUEPRINT (Cigarro via Folha) - Fase 1         │  │
+│  │  Input: Folha de Tabaco (26414) + CA Cloth (4272)      │  │
+│  │  CategoryTag: Supplies                                  │  │
+│  │  Output: Cigarro (26409)                                │  │
+│  │  Effect: Rip                                            │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+4. ARQUIVOS DO ASSETBUNDLE (Bag)
+4.1 Meshes (Modelos 3D)
+Arquivo	Nome	Vértices	Triângulos	Tamanho (AABB)	Função
+SeedBag_0	SeedBag_0	133	564	0.224 x 0.224 x 0.227	Bolsa (LOD0) - Modelo principal da bag
+SeedBag_1	SeedBag_1	52	213	0.224 x 0.228 x 0.227	Bolsa (LOD1) - Versão simplificada
+Tomato_Seed	Tomato_Seed	8	12	-	Referência para semente
+Observações:
+
+SeedBag_0 é o modelo principal com mais detalhes (133 vértices)
+
+SeedBag_1 é a versão LOD1 com menos polígonos (52 vértices)
+
+Ambos estão no mesmo sistema de coordenadas (Layer 27, Tag 20019)
+
+O centro da bag está em z = 0.064 (ligeiramente elevado)
+
+4.2 Materiais
+Arquivo	Nome	Shader	Cor (_Color)	Uso
+SeedShell	SeedShell	-4850512016903265157	(1, 1, 1, 1)	Material principal da bag
+SeedShellBase	SeedShellBase	-4850512016903265157	(0.376, 0.302, 0.255, 1)	Base da casca da semente
+Plant_Tomato	Plant_Tomato	-	(0.356, 0.462, 0.290)	Referência (fruto)
+Configuração do SeedShell:
+
+Shader: -4850512016903265157 (Shader padrão de planta)
+
+Keywords: _EMISSION, _METALLICGLOSSMAP
+
+Emission Map: seedshell emissive
+
+Main Texture: seedshell (2x2 pixels - placeholder)
+
+MetallicGlossMap: seedshell metal
+
+LightmapFlags: 1
+
+Configuração do SeedShellBase:
+
+Shader: -4850512016903265157
+
+Keywords: _NORMALMAP
+
+BumpMap: SeedShell_Normal (normal map 64x64)
+
+LightmapFlags: 4
+
+Bump Scale: 0.25
+
+4.3 Texturas
+Arquivo	Nome	Tamanho	Formato	MipCount	Uso
+seedshell	seedshell	2x2	3 (RGB24)	2	Main Texture - Placeholder 2x2
+seedshell emissive	seedshell emissive	64x64	10 (DXT5)	7	Emission Map - Emissive 64x64
+seedshell metal	seedshell metal	2x2	4 (RGBA32)	2	Metallic/Gloss Map
+SeedShell_Normal	SeedShell_Normal	64x64	4 (RGBA32)	7	Normal Map - Bump/Normal 64x64
+Plant_Amber	Plant_Amber	32x32	-	-	Referência (atlas de plantas)
+Observações:
+
+seedshell é 2x2 pixels - um placeholder/borda que será substituído pela textura real
+
+seedshell emissive e SeedShell_Normal são 64x64 com detalhes
+
+As texturas emissivas indicam que a bag pode ter brilho/emissão
+
+O normal map (bump) tem Wrap Mode 0 (repeat/clamp)
+
+4.4 GameObjects (Prefab)
+Arquivo	Nome	Layer	Tag	Uso
+Bag_Tobacco	Bag_Tobacco	27 (Item)	20019	Item no inventário/mundo
+SeedEffect	SeedEffect	16 (Reserved)	20007	Efeito visual (partículas?)
+Observações:
+
+SeedEffect está na Layer 16 (Reserved) - provavelmente usado para efeitos de partículas ao plantar
+
+Tag 20007 é usada para efeitos/partículas no Unturned
+
+4.5 Componentes do Prefab (Bag_Tobacco)
+Componente	Referência	Configuração
+GameObject	Layer 27, Tag 20019, Nome "Bag_Tobacco"	IsActive: true
+Transform	Pos(0,0,0), Scale(1,1,1)	-
+MeshFilter	Mesh → SeedBag_0 (LOD0) ou SeedBag_1 (LOD1)	-
+MeshRenderer	Material → SeedShell	Com texturas configuradas
+5. HIERARQUIA DO PREFAB (Bag_Tobacco)
+text
+┌─────────────────────────────────────────────────────────────────┐
+│ Transform Raiz                                                │
+│ ├── GameObject: Bag_Tobacco                                  │
+│ ├── Position: (0, 0, 0)                                      │
+│ ├── Scale: (1, 1, 1)                                        │
+│ │                                                             │
+│ └── Components:                                              │
+│     ├── Transform                                            │
+│     ├── MeshFilter                                           │
+│     │   └── Mesh: SeedBag_0 (LOD0) ou SeedBag_1 (LOD1)     │
+│     └── MeshRenderer                                         │
+│         └── Material: SeedShell                             │
+│             ├── Main Texture: seedshell (2x2)              │
+│             ├── Emission Map: seedshell emissive (64x64)  │
+│             ├── Metallic Map: seedshell metal (2x2)       │
+│             └── Normal Map: SeedShell_Normal (64x64)      │
+└─────────────────────────────────────────────────────────────────┘
+6. ARQUIVOS .DAT (COMPLETOS)
+6.1 Tobacco_Seed_CA.dat (Fase 1 - Já existe)
+yaml
+GUID d85985cb62b84b7b8b7d4ed21359f1d1
+Type Farm
+Useable Barricade
+Build Farm
+ID 52642
+
+Size_X 1
+Size_Y 1
+
+Health 4
+Range 4
+Radius 0.25
+Offset 0.375
+
+Growth 3600
+Grow e240345a066843af8df45d8c5f6c8e80
+
+Explosion 43
+Vulnerable
+Unrepairable
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "e240345a066843af8df45d8c5f6c8e80" // Tobacco Plant
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 0
+
+PlacementAudioClip core.masterbundle:Sounds/FoliagePlacement.mp3
+Has_Clip_Prefab false
+6.2 Bag_of_Tobacco_Seeds.dat (Fase 2 - NOVO)
+yaml
+GUID fd44252c66f7481a8ac8d29030837824
+Type Farm
+Useable Barricade
+Build Farm
+ID 9001
+
+Size_X 2
+Size_Y 2
+
+Health 32
+Range 4
+Radius 0.25
+Offset 0.375
+
+Growth 3600
+Grow e240345a066843af8df45d8c5f6c8e80
+
+Explosion 43
+Vulnerable
+Unrepairable
+Allow_Fertilizer false
+
+Blueprints
+[
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems "d85985cb62b84b7b8b7d4ed21359f1d1 x 8" // Tobacco Seed CA
+		OutputItems this
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+	{
+		CategoryTag "bfac6026305f4737a95fd275ebff65a6" // Utilities
+		InputItems this
+		OutputItems "d85985cb62b84b7b8b7d4ed21359f1d1 x 8" // Tobacco Seed CA
+		Effect "84347b13028340b8976033c08675d458" // Wrench
+	}
+]
+
+Actions 1
+Action_0_Type Blueprint
+Action_0_Blueprints 1
+Action_0_Blueprint_0_Index 1
+
+PlacementAudioClip core.masterbundle:Sounds/FoliagePlacement.mp3
+Has_Clip_Prefab false
+7. LAYERS E TAGS
+Layer	Número	Uso no Unturned	Uso no Tabaco
+Resource	14	Objetos coletáveis no mundo	Folhas no mundo
+Item	27	Itens no inventário ou no chão	Semente, Bag, Planta, Folha colhida
+Reserved	16	Efeitos/partículas	SeedEffect (partículas de plantio)
+Tag	Uso
+20005	Fruto/Folhas (Resource) no mundo
+20007	Efeitos (SeedEffect)
+20019	Item colhido
+8. GUIDS E IDs CONFIRMADOS
+Item	GUID	ID
+Tobacco Plant (colhida)	e240345a066843af8df45d8c5f6c8e80	26413
+Tobacco Leaves	42f47f1a23f948d9a691f5bedaa5f9fb	26414
+Tobacco Seed (original)	11303a948af948fab7655c459f3b90a5	26412
+Tobacco Seed CA (Fase 1)	d85985cb62b84b7b8b7d4ed21359f1d1	52642
+Bag of Tobacco Seeds	fd44252c66f7481a8ac8d29030837824	9001
+Single Cigarette	cea61dcfe8254da39e43ad8dc47be97c	26409
+CA Cloth	fde0f4395a46442cb8de3928d5aefb71	4272
+CategoryTag Utilities	bfac6026305f4737a95fd275ebff65a6	-
+Effect Wrench	84347b13028340b8976033c08675d458	-
+Effect Rip	7eceb9f7751d4634b572c8e236355104	-
+CategoryTag Supplies	d089feb7e43f40c5a7dfcefc36998cfb	-
+CategoryTag Gear	cdb2df24b76d4c6e9d8411c940d8337f	-
+9. SHADERS (Referência)
+PathID	Nome	Uso
+-4850512016903265157	Shader padrão de planta	SeedShell, SeedShellBase
+952725256833404699	Shader de planta (corte)	Tobacco (caule)
+6661442146922177206	Shader de folhagem	Tobacco-foliage
+10. O QUE VOCÊ PRECISA FAZER (CHECKLIST COMPLETO)
+10.1 Criar a Textura da Bag
+Criar Bag_Tobacco.png (64x64 ou 128x128)
+
+Aparência de saco de sementes (cores: marrom, bege, verde escuro)
+
+Fundo transparente (canal alfa)
+
+Salvar como PNG com canal alfa
+
+Opcional: emissive map para brilho
+
+10.2 Criar o Prefab no Unity
+Importar mesh SeedBag_0 (reutilizar do CA2)
+
+Importar mesh SeedBag_1 (LOD1 - opcional)
+
+Criar Material SeedShell com:
+
+Shader: -4850512016903265157 (mesmo do SeedShell original)
+
+Main Texture: seedshell (2x2 placeholder) → substituir por Bag_Tobacco.png
+
+Emission Map: seedshell emissive (opcional)
+
+Normal Map: SeedShell_Normal (opcional)
+
+Criar GameObject com MeshFilter + MeshRenderer
+
+Atribuir SeedBag_0 ao MeshFilter
+
+Atribuir Material ao MeshRenderer
+
+Configurar Layer 27, Tag 20019
+
+Salvar como Prefab: Bag_Tobacco
+
+Gerar AssetBundle: bag_of_tobacco_seeds.unity3d
+
+10.3 Configurar os .dat
+Tobacco_Seed_CA.dat criado (GUID: d85985cb62b84b7b8b7d4ed21359f1d1, ID: 52642)
+
+Bag_of_Tobacco_Seeds.dat criado (GUID: fd44252c66f7481a8ac8d29030837824, ID: 9001)
+
+Verificar se Tobacco_Seed_CA.dat tem a Blueprint de criação (Planta → Semente + Folhas)
+
+Verificar se Bag_of_Tobacco_Seeds.dat tem as Blueprints de compressão/descompressão
+
+10.4 Estrutura de Pastas
+Criar pasta: Bundles/Items/Buildables/Barricades/Seed/Stacked/Bag_of_Tobacco_Seeds/
+
+Colocar .dat e .unity3d na pasta
+
+10.5 Testar no Jogo
+Verificar se a Bag aparece no inventário
+
+Verificar compressão (8 sementes → 1 bag)
+
+Verificar descompressão (1 bag → 8 sementes)
+
+Verificar plantio (bag → planta de tabaco)
+
+Verificar crescimento (Growth: 3600 segundos / 1 hora)
+
+Verificar colheita (2 folhas por colheita × 8 colheitas = 16 folhas totais)
+
+Verificar se a planta volta a crescer após colhida
+
+11. OBSERVAÇÕES IMPORTANTES
+11.1. A Bag É o Único Asset Novo Visual
+✅ Prefab da Bag: Único asset visual novo (reutiliza meshes do CA2)
+
+✅ .dat da Bag: Adaptado do CA_Seed_Tomato_S.dat
+
+✅ Planta: Reaproveitada do Animated Cigarettes
+
+✅ Meshes da planta: Reaproveitados do Animated Cigarettes
+
+✅ Crescimento/cronômetro: Sistema do Unturned
+
+✅ Blueprints: Template do Tomato_S
+
+11.2. Os Meshes da Bag Já Existem
+SeedBag_0 (LOD0 - 133 vértices, 564 triângulos)
+
+SeedBag_1 (LOD1 - 52 vértices, 213 triângulos)
+
+Ambos já estão no AssetBundle do CA2 (CAB-99ab61915a97863d884e2f8fab63b22a)
+
+11.3. Os Materiais da Bag Já Existem
+SeedShell (material principal com emissive)
+
+SeedShellBase (base com normal map)
+
+SeedShell_Normal (normal map 64x64)
+
+seedshell emissive (emissive map 64x64)
+
+Apenas a textura seedshell (2x2) precisa ser substituída
+
+11.4. O "8x" Não É Mágico
+2 itens por colheita × 8 colheitas = 16 itens totais
+
+O Health 32 permite 8 colheitas (32 ÷ 4 = 8)
+
+Cada colheita dá 2 folhas (configurado na planta do Tobacco)
+
+11.5. A Planta do Tobacco Precisa de Grow ID
+Verifique se o .dat da planta do Tobacco (26413) tem:
+
+text
+Grow: [ID_DA_PROXIMA_FASE] ou Grow: 0
+Se não tiver, adicione manualmente para garantir o ciclo contínuo
+
+11.6. Tempo de Crescimento
+O CA2 usa 3600 segundos (1 hora) para o Tomate
+
+O Animated Cigarettes usa 1500 segundos (25 minutos) para o Tabaco
+
+Decidimos usar 3600 segundos para consistência com o sistema CA2
+
+12. COMPARAÇÃO: TOMATE_S vs TOBACCO_BAG
+Campo	CA_Seed_Tomato_S	Bag_of_Tobacco_Seeds
+GUID	8fdc561ef1b5470799bc21bcbf4359b0	fd44252c66f7481a8ac8d29030837824
+ID	7061	9001
+Type	Farm	Farm
+Useable	Barricade	Barricade
+Build	Farm	Farm
+Size_X	2	2
+Size_Y	2	2
+Health	32	32
+Growth	3600	3600
+Grow	4321 (Tomato)	e240345a066843af8df45d8c5f6c8e80 (Tobacco)
+Allow_Fertilizer	false	false
+Blueprint 0	8x Tomato Seed → this	8x Tobacco Seed CA → this
+Blueprint 1	this → 8x Tomato Seed	this → 8x Tobacco Seed CA
+Mesh	Tomato_Seed (8 vértices)	SeedBag_0 (133 vértices)
+Material	SeedShell	SeedShell
+13. CONCLUSÃO
+A Bag_of_Tobacco_Seeds está quase pronta. Faltam apenas:
+
+Criar a textura Bag_Tobacco.png (64x64 com canal alfa)
+
+Criar o prefab no Unity usando SeedBag_0 + SeedShell (com a nova textura)
+
+Gerar o AssetBundle bag_of_tobacco_seeds.unity3d
+
+Colocar na estrutura de pastas do addon
+
+Testar no jogo
+
+Todos os arquivos .dat já estão configurados e todos os assets de referência (meshes, materiais, shaders) já existem no AssetBundle do CA2.
+
+Fim do Documento - Arquitetura Completa da Bag_of_Tobacco_Seeds
